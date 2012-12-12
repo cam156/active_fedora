@@ -30,6 +30,24 @@ describe ActiveFedora::OmDatastream do
 
       @test_object.descMetadata.should_not be_changed
     end
+
+    it "should not be changed after saving" do
+      
+      @pid = "hydrangea:fixture_mods_article2"
+      @test_object = HydrangeaArticle2.find(@pid)
+
+      @test_object.descMetadata.title = "something new"
+      @test_object.descMetadata.should be_changed
+      @test_object.save!
+      @test_object.descMetadata.should_not be_changed
+      # At this point it ought to be setting datastream_content = content so that we know if future changes occur.
+
+      @test_object.descMetadata.title = "another thing"
+      @test_object.descMetadata.should be_changed
+      @test_object.save!
+      # It's only on this assertion that this test fails
+      @test_object.descMetadata.should_not be_changed
+    end
   end
 
   describe '.term_values' do
