@@ -107,7 +107,7 @@ module ActiveFedora
       if new?
         !to_xml.empty?
       else
-       (to_xml.strip != (datastream_content || '').strip)
+       to_xml != Nokogiri::XML(datastream_content || '').to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::NO_DECLARATION)
      end
     end
 

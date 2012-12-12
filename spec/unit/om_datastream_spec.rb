@@ -232,6 +232,28 @@ describe ActiveFedora::OmDatastream do
       @test_ds2.instance_variable_get(:@content).should be_nil
     end
   end
+
+  describe "ng_xml_changed?" do
+    before do
+      @test_ds2 = ActiveFedora::OmDatastream.new(@mock_inner, "descMetadata")
+    end
+    describe "when not new" do
+      before do
+        fedora_xml = '<xml attr="foo"></xml>'
+        # Fedora always reformats the xml such that empty nodes are always a start and end tag
+        @test_ds2.stub(:xml_loaded => true, :new? => false, :ng_xml=>Nokogiri::XML(fedora_xml),  :datastream_content=>fedora_xml)
+      end
+      it "should not be changed" do
+        @test_ds2.ng_xml_changed?.should be_false
+      end
+    end
+    describe "when new" do
+      it "should not be changed" do
+        @test_ds2.ng_xml_changed?.should be_false
+      end
+    end
+
+  end
   
   describe '.to_xml' do
     it "should provide .to_xml" do
